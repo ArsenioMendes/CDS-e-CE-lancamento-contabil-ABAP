@@ -1,0 +1,43 @@
+@AbapCatalog.sqlViewName: 'ZCDSFIPRINCIPAL'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@Analytics.query : true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@Search.searchable: false
+@EndUserText.label: 'CDS view FI relatorio  china'
+@OData.publish: true
+
+/*Consulta de dados finais, recebe campo Balanco01 e Balanco02
+dados da view ZCDS_FI_DAT_FIM*/
+
+define view ZCDS_FI_PRINCIPAL
+
+  with parameters
+    p_dt_ini : dats,
+    p_dt_fim : dats,
+    p_gjahr  : gjahr
+    
+    
+ as select from ZCDS_FI_DAT_FIM (  p_dt_ini: $parameters.p_dt_ini,
+                                 p_dt_fim: $parameters.p_dt_fim,
+                                 p_gjahr: $parameters.p_gjahr ) as Final
+ 
+
+ 
+{ 
+key Banco,
+key Conta,
+key ContaOrigem,
+DataInicio,
+DataFim,
+Balanco01,
+Balanco02,
+( Balanco01 - Balanco02 ) as Variacao,
+
+
+
+DD_BALANCO1,
+DD_BALANCO2,
+DD_BALANCO3
+}
+

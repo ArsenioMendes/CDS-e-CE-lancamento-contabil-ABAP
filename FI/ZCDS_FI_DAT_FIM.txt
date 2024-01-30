@@ -1,0 +1,75 @@
+@AbapCatalog.sqlViewName: 'ZCDSFIDATFIM'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Soma de Contas - Data Fim'
+
+/*Consulta de dados, recebe campo Balanco01 dados da view ZCDS_FI_DAT_INI*/
+
+
+define view ZCDS_FI_DAT_FIM
+ with parameters
+    p_dt_ini : dats,
+    p_dt_fim : dats,
+    p_gjahr  : gjahr
+
+
+  as select from    v_t012k_bam       as T012K
+    inner join      v_t012t_bam       as t012t      on  t012t.bukrs = T012K.bukrs
+                                                    and t012t.hbkid = T012K.hbkid
+
+
+    inner join      ZCDS_FI_DAT_INI as Somatorio2 on  Somatorio2.Con_Origem  = T012K.hkont
+                                                    and Somatorio2.Data        <= $parameters.p_dt_fim
+                                                    and Somatorio2.Cod_Empresa = T012K.bukrs
+                                                    and Somatorio2.Ano         = $parameters.p_gjahr
+
+    left outer join ZCDS_FI_DAT_INI as Somatorio  on  Somatorio.Con_Origem  = T012K.hkont
+                                                    and Somatorio.Documento   = Somatorio2.Documento
+                                                    and Somatorio.Data        <= $parameters.p_dt_ini
+                                                    and Somatorio.Cod_Empresa = T012K.bukrs
+                                                    and Somatorio.Ano         = $parameters.p_gjahr
+
+
+
+  association [1..*] to ZCDS_FI_DRILLDOWN as y on  y.Con_Origem = T012K.hkont
+                                           and y.budat_tst  <= $parameters.p_dt_fim
+
+  association [1..*] to ZCDS_FI_DRILLDOWN as x on  x.Con_Origem = T012K.hkont
+                                           and x.budat_tst  <= $parameters.p_dt_ini
+
+  association [1..*] to ZCDS_FI_DRILLDOWN as z on  z.Con_Origem   = T012K.hkont
+                                           and (
+                                              z.budat_tst     <= $parameters.p_dt_fim
+                                              and z.budat_tst >= $parameters.p_dt_ini
+                                            )
+
+
+
+
+{
+  key t012t.text1                    as Banco,
+  key T012K.bankn                    as Conta,
+  key T012K.hkont                    as ContaOrigem,
+      $parameters.p_dt_ini           as DataInicio,
+      $parameters.p_dt_fim           as DataFim,
+
+
+
+      sum( Somatorio.MontanteSoma )  as Balanco01,
+      sum( Somatorio2.MontanteSoma ) as Balanco02,
+
+
+
+
+      x                              as DD_BALANCO1,
+      y                              as DD_BALANCO2,
+      z                              as DD_BALANCO3
+
+
+}
+group by
+  text1,
+  bankn,
+  hkont;
+

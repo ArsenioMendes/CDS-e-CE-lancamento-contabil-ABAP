@@ -1,0 +1,29 @@
+@AbapCatalog.sqlViewName: 'ZCDSFIDATINI'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'Soma de contas'
+
+/*CDS para calculo de Balanco em período inicial*/
+
+define view ZCDS_FI_DAT_INI
+
+as select  from acdoca as acd
+ 
+ 
+{
+// Selecionando campos de empresa, documento, num conta, exercício e data para calcular montante do período indicado.
+key acd.rbukrs as Cod_Empresa,
+key acd.belnr as Documento,
+key acd.racct as Con_Origem,
+
+sum( acd.tsl ) as MontanteSoma,
+acd.budat as Data,
+
+acd.gjahr as Ano
+
+}
+
+where  acd.rldnr = '0L'
+
+group by acd.rbukrs, acd.racct, acd.budat, acd.gjahr, acd.belnr;

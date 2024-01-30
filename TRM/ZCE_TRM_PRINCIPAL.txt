@@ -1,0 +1,31 @@
+@ObjectModel.query.implementedBy: 'ABAP:ZCL_TRM_ACCRUAL_DEFERRAL'
+@EndUserText.label: 'Custom Entity para juros TRM'
+define custom entity ZCE_TRM_PRINCIPAL
+
+  with parameters
+
+    p_bukrs       : bukrs,
+    s_conta       : hkont,
+    p_periodo_de  : char08,
+    p_periodo_ate : char08,
+    p_gjahr       : gjahr,
+    p_drilldown   : boolean
+
+{
+      //Campos da tela principal
+  key conta     : tb_kunnr_new;
+      banco     : abap.char( 81 );
+      balanco1  : abap.dec( 21, 2 );
+      balanco2  : abap.dec( 21, 2 );
+      variacao  : abap.dec( 21, 2 );
+      //Campos do DrillDown
+      bukrs     : bukrs;
+      butxt     : abap.char(81);
+      tran_trm  : tb_rfha;
+      doc_pgto  : abap.char( 10 );
+      dt_pgto   : char08;
+      val_bruto : abap.dec( 21, 2 );
+      val_liq   : abap.dec( 21, 2 );
+
+
+}

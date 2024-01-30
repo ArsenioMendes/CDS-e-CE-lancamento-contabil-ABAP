@@ -1,0 +1,95 @@
+@EndUserText.label: 'GetT TRM Hotspot Items'
+
+define table function ZTF_TRM_ITEMS
+
+  with parameters
+
+    @Environment.systemField: #CLIENT
+
+    p_mandt       : abap.clnt,
+
+    p_bukrs       : bukrs,
+
+    s_conta       : abap.char( 1000 ),
+
+    p_periodo_de  : dats,
+
+    p_periodo_ate : dats
+
+returns
+
+{
+
+  mandt                 : abap.clnt;
+
+  empresa               : bukrs;
+
+  banco                 : abap.char( 81 );
+
+  conta                 : tb_kunnr_new;
+
+  transacao             : tb_rfha;
+
+  tipo_produto          : vvsart;
+
+  classe_titulo         : vvranlw;
+
+  deposito              : vrldepo;
+
+  bolsa                 : vvrhandpl;
+
+  data_comp             : tb_dcrdat;
+
+  //Doc_Pgto  : belnr_d;
+
+  ini_validade          : tb_dblfz;
+
+  fim_validade          : tb_dblfz;
+
+  tipo_movimento        : tb_sfhazba;
+
+  tipo_contrato         : rantyp;
+
+  dias_aplicacao1       : abap.int4;
+
+  dias_aplicacao2       : abap.int4;
+
+  percentual_ir1        : tb_pabsatz;
+
+  percentual_iof1       : tb_pabsatz;
+
+  percentual_irrf1      : tb_pabsatz;
+
+  percentual_ir2        : tb_pabsatz;
+
+  percentual_iof2       : tb_pabsatz;
+
+  percentual_irrf2      : tb_pabsatz;
+
+  categoria_produto     : tb_sanlf;
+
+  categoria_transacao   : tb_sfgtyp;
+
+  ultima_oper_ativa     : tb_rfhazul;
+
+  data_pagamento        : tb_dzterm;
+
+  class_movimento       : tb_sbkklas;
+
+  categoria_movimento   : tb_sbktyp;
+
+  valor_cota_data_apl   : vvpktkur;
+
+  valor_cota_data_1     : vvpktkur;
+
+  valor_cota_data_2     : vvpktkur;
+
+  valor_contratado      : tb_bzbetr;
+
+  amortizacao_principal : tb_astueck;
+
+}
+
+implemented by method
+
+  zcl_FI0007=>get_hotspot_trm_itens;

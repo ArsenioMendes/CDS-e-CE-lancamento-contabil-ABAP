@@ -1,0 +1,44 @@
+@AbapCatalog.sqlViewName: 'ZCDSFIDRILLDOWN'
+@AbapCatalog.compiler.compareFilter: true
+@AbapCatalog.preserveKey: true
+@AccessControl.authorizationCheck: #NOT_REQUIRED
+@EndUserText.label: 'CDS do Drill Down'
+
+define view ZCDS_FI_DRILLDOWN
+
+
+as select distinct from acdoca as acd
+ 
+ inner join t001 on t001.bukrs = acd.rbukrs
+  
+ left outer join lfa1 on lfa1.lifnr = acd.lifnr
+ 
+ inner join skat on skat.saknr = acd.racct and skat.spras = $session.system_language
+ 
+ inner join bseg on bseg.bukrs = acd.rbukrs and bseg.belnr = acd.belnr and bseg.gjahr = acd.gjahr 
+  
+{
+
+key acd.rbukrs as Cod_Empresa,
+key acd.racct as Con_Origem,
+key acd.belnr as Num_Documento,
+
+t001.butxt as Nom_Empresa,
+
+acd.lifnr as Cod_Fornecedor,
+lfa1.name1 as Nom_Fornecedor,
+acd.kunnr as Cod_Cliente,
+lfa1.name1 as Nom_Cliente,
+skat.txt50 as Nom_Con_Orig,
+acd.blart as TP_Part_Indiv,
+acd.augbl as Num_Doc_Pagamento,
+acd.augdt as Dat_Pagamento,
+acd.augbl as Num_Doc_Recebimento,
+acd.augdt as Dat_Recebimento,
+acd.tsl as Mon_Liquido,
+acd.budat as budat_tst,
+acd.gjahr as gjahr_tst
+
+}
+
+where  acd.rldnr = '0L'
